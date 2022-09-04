@@ -4,26 +4,19 @@ require 'sinatra/base'
 require './lib/wordle.rb'
 require 'json'
 require 'yaml'
-require 'pry'
 
 class Wordler < Sinatra::Base
 
   wordle = Wordle.new './data/nytwordle.json'
-  #mywords1 = wordle.get_words("Q")
-  #mywords2 = wordle.get_words("Q", 3)
 
   get '/' do
-    headers['Content-Type'] = 'text/plain'
-    <<HELP
-    Call the service like this:
-
-    #{uri}wordle.json?letters=LEDGE
-HELP
+    self.help("#{uri}wordle.json?letters=LEDGE")
   end
 
   get '/wordle.?:format?' do
+    return self.help("#{uri}?letters=LEDGE") if params['letters'].nil?
     letters = params['letters'].upcase
-    positional = params['positional'] || true
+    positional = validate params['positional']
     if(letters.length > 5 || (!positional && letters.length <= 5 && letters.length > 0))
       if params['format'] == 'json'
         content_type 'json'
@@ -47,8 +40,9 @@ HELP
   end
 
   post '/wordle.?:format?' do
+    return self.help("#{uri}?letters=LEDGE") if params['letters'].nil?
     letters = params['letters'].upcase
-    positional = params['positional'] || true
+    positional = validate params['positional']
     if(letters.length > 5 || (!positional && letters.length <= 5 && letters.length > 0))
       if params['format'] == 'json'
         content_type 'json'
@@ -72,8 +66,27 @@ HELP
   end
 
   private
-  #def respond msg, format
-    #
-  #end
+
+  def validate positional
+    case positional
+    when nil?
+      return true
+    when /true/i
+      return true
+    when /false/i
+      return false
+    else
+      return true
+    end
+  end
+
+  def help endpoint
+    headers['Content-Type'] = 'text/plain'
+    <<HELP
+    Call the service like this:
+
+    #{endpoint}
+HELP
+  end
 
 end
