@@ -10,11 +10,11 @@ class Wordler < Sinatra::Base
   wordle = Wordle.new './data/nytwordle.json'
 
   get '/' do
-    self.help(uri, request.path)
+    self.help
   end
 
   get '/wordle.?:format?' do
-    return self.help(uri, request.path) if params['letters'].nil?
+    return self.help if params['letters'].nil?
     letters = params['letters'].upcase
     positional = validate params['positional']
     if(letters.length > 5)
@@ -41,7 +41,7 @@ class Wordler < Sinatra::Base
   end
 
   post '/wordle.?:format?' do
-    return self.help(uri, request.path) if params['letters'].nil?
+    return self.help if params['letters'].nil?
     letters = params['letters'].upcase
     positional = validate params['positional']
     if(letters.length > 5)
@@ -83,13 +83,12 @@ class Wordler < Sinatra::Base
   end
 
 
-  def help uri, request_path
-    endpoint = uri.sub(request_path, '')
+  def help
     headers['Content-Type'] = 'text/plain'
     <<HELP
     Call the service like this:
 
-    #{endpoint}wordle.json?letters=LEDGE
+    /wordle.json?letters=LEDGE
 HELP
   end
 
