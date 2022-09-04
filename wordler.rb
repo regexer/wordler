@@ -10,14 +10,15 @@ class Wordler < Sinatra::Base
   wordle = Wordle.new './data/nytwordle.json'
 
   get '/' do
-    self.help("#{uri}wordle.json?letters=LEDGE")
+    self.help(uri, request.path)
   end
 
   get '/wordle.?:format?' do
-    return self.help("#{uri}?letters=LEDGE") if params['letters'].nil?
+    return self.help(uri, request.path) if params['letters'].nil?
     letters = params['letters'].upcase
     positional = validate params['positional']
-    if(letters.length > 5 || (!positional && letters.length <= 5 && letters.length > 0))
+    if(letters.length > 5)
+
       if params['format'] == 'json'
         content_type 'json'
         { :status => 'error', :msg => "Sorry, wordle uses 5-letter words only." }.to_json
@@ -40,10 +41,11 @@ class Wordler < Sinatra::Base
   end
 
   post '/wordle.?:format?' do
-    return self.help("#{uri}?letters=LEDGE") if params['letters'].nil?
+    return self.help(uri, request.path) if params['letters'].nil?
     letters = params['letters'].upcase
     positional = validate params['positional']
-    if(letters.length > 5 || (!positional && letters.length <= 5 && letters.length > 0))
+    if(letters.length > 5)
+
       if params['format'] == 'json'
         content_type 'json'
         { :status => 'error', :msg => "Sorry, wordle uses 5-letter words only." }.to_json
@@ -80,12 +82,14 @@ class Wordler < Sinatra::Base
     end
   end
 
-  def help endpoint
+
+  def help uri, request_path
+    endpoint = uri.sub(request_path, '')
     headers['Content-Type'] = 'text/plain'
     <<HELP
     Call the service like this:
 
-    #{endpoint}
+    #{endpoint}wordle.json?letters=LEDGE
 HELP
   end
 
