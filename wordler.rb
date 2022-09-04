@@ -18,6 +18,7 @@ class Wordler < Sinatra::Base
     letters = params['letters'].upcase
     positional = validate params['positional']
     if(letters.length > 5)
+
       if params['format'] == 'json'
         content_type 'json'
         { :status => 'error', :msg => "Sorry, wordle uses 5-letter words only." }.to_json
@@ -44,6 +45,7 @@ class Wordler < Sinatra::Base
     letters = params['letters'].upcase
     positional = validate params['positional']
     if(letters.length > 5)
+
       if params['format'] == 'json'
         content_type 'json'
         { :status => 'error', :msg => "Sorry, wordle uses 5-letter words only." }.to_json
@@ -79,6 +81,7 @@ class Wordler < Sinatra::Base
       return true
     end
   end
+
 
   def help uri, request_path
     endpoint = uri.sub(request_path, '')
