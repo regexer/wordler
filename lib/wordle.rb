@@ -7,15 +7,13 @@ class Wordle
 
   def load_words filename
     words = JSON.parse(File.read(filename))
-    #testing
-    #words = words[0..100]
 
     # Hash of hash of arrays
     whohoa = Hash.new{|h,k| h[k] = Hash.new {|h,k| h[k] = [] } }
     @positionalchar = Hash.new {|h,k| h[k] = Hash.new {|h,k| h[k] = [] } }
     @nonpositionalchar = Hash.new {|h,k| h[k] = [] }
     # initialize (not necessary, but it's nice to see things stored
-    # in alphabetical order, as well as see empty entries
+    # in alphabetical order, as well as see empty entries)
     "ABCDEFGHIJKLMNOPQRSTUVWXYZ".chars.each do |char|
       @nonpositionalchar[char] = []
       @positionalchar[char][0] = []
