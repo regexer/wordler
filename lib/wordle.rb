@@ -58,23 +58,8 @@ class Wordle
   private
 
   def get_intersection wordsets
-      case wordsets.count
-      when 0
-        return []
-      when 1
-        return wordsets[0]
-      when 2
-        return wordsets[0] & wordsets[1]
-      when 3
-        return wordsets[0] & wordsets[1] & wordsets[2]
-      when 4
-        return wordsets[0] & wordsets[1] & wordsets[2] & wordsets[3]
-      when 5
-        return wordsets[0] & wordsets[1] & wordsets[2] & wordsets[3] & wordsets[4]
-      else
-        return "Error"
-      end
-    
+    return [] if wordsets.empty?
+    wordsets.reduce(:&)
   end
  
   def words char, pos=-1
